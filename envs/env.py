@@ -84,8 +84,8 @@ class PGMIndex(gym.Env):
         self.para_dict = {'epsilon': 64, 'er': 4} # PGM tunable parameters
 
         self.action_dict = {
-            'epsilon': list(np.arange(1,4000,100)),
-            'er': list(np.arange(0,20,1))
+            'epsilon': list(np.arange(100,1000,100)),
+            'er': list(np.arange(0,10,1))
             }
 
         action_comb =  itertools.product(self.action_dict["epsilon"],self.action_dict["er"])
@@ -123,7 +123,7 @@ class PGMIndex(gym.Env):
         
         Parameter_change.updateFile("./Index/PGM/index_test.cpp",self.para_dict["epsilon"],self.para_dict["er"])
         os.system('g++ ./Index/PGM/index_test.cpp  -w -std=c++17 -o ./Index/PGM/exe_pgm_index')
-        os.system(f'./Index/PGM/exe_pgm_index ./Index/PGM/{self.data_file_name}')
+        os.system(f'./Index/PGM/exe_pgm_index ./data/{self.data_file_name}')
 
             # other Index in progress
 

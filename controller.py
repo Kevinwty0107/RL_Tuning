@@ -12,7 +12,7 @@ import os
 import gym
 from agents import TD3
 from baseline import SMBO
-from hyperopt import fmin,tpe,hp,partial,Trials
+from hyperopt import fmin,tpe,hp,partial,Trials,space_eval
 from Index.PGM import Parameter_change
 from baseline.random_search import random_search
 from baseline.grid_search import grid_search
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
             Parameter_change.updateFile("./Index/PGM/index_test.cpp",64,4)
             os.system('g++ ./Index/PGM/index_test.cpp  -w -std=c++17 -o ./Index/PGM/exe_pgm_index')
-            os.system(f'./Index/PGM/exe_pgm_index ./Index/PGM/{data_file_name}')
+            os.system(f'./Index/PGM/exe_pgm_index ./data/{data_file_name}')
 
             f = open("runtime_result.txt",encoding="utf-8")
             cost = float(f.read())
@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
                 Parameter_change.updateFile("./Index/PGM/index_test.cpp",params['epsilon'],params['ER'])
                 os.system('g++ ./Index/PGM/index_test.cpp  -w -std=c++17 -o ./Index/PGM/exe_pgm_index')
-                os.system(f'./Index/PGM/exe_pgm_index ./Index/PGM/{data_file_name}')
+                os.system(f'./Index/PGM/exe_pgm_index ./data/{data_file_name}')
 
             # other Index in progress
 
@@ -87,15 +87,16 @@ if __name__ == "__main__":
 
         param_grid = {
             'epsilon': hp.choice('epsilon', range(100,8000) ),
-            'ER': hp.choice('ER', range(5,20))}
+            'ER': hp.choice('ER', range(1,20))}
 
         trials = Trials()
         start = time.monotonic()
         best = fmin(f_model, param_grid, algo=tpe.suggest, max_evals=1000, trials=trials)
         end = time.monotonic()
+        best_hyp = space_eval(param_grid, best)
         time_tuning = end- start
         print('best:')
-        print(best)
+        print(best_hyp)
         print('time used:')
         print(time_tuning)
 
@@ -105,9 +106,9 @@ if __name__ == "__main__":
         file_name = "result"+ f"_{args.data_file}"
 
         result = []
-        result.append(hyperopt_model_score(best))
+        result.append(hyperopt_model_score(best_hyp))
         result.append(time_tuning)
-        result.append(best)
+        result.append(best_hyp)
 
         np.save(f"./results/{args.search_method}/{file_name}", result)
 
@@ -132,7 +133,7 @@ if __name__ == "__main__":
 
                 Parameter_change.updateFile("./Index/PGM/index_test.cpp",epsilon,er)
                 os.system('g++ ./Index/PGM/index_test.cpp  -w -std=c++17 -o ./Index/PGM/exe_pgm_index')
-                os.system(f'./Index/PGM/exe_pgm_index ./Index/PGM/{data_file_name}')
+                os.system(f'./Index/PGM/exe_pgm_index ./data/{data_file_name}')
 
             # other Index in progress
 
@@ -198,7 +199,7 @@ if __name__ == "__main__":
 
                 Parameter_change.updateFile("./Index/PGM/index_test.cpp",epsilon,er)
                 os.system('g++ ./Index/PGM/index_test.cpp  -w -std=c++17 -o ./Index/PGM/exe_pgm_index')
-                os.system(f'./Index/PGM/exe_pgm_index ./Index/PGM/{data_file_name}')
+                os.system(f'./Index/PGM/exe_pgm_index ./data/{data_file_name}')
 
             # other Index in progress
 

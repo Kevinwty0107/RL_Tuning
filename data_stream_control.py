@@ -28,7 +28,7 @@ import os
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser()
-    parser.add_argument("--search_method", default='BO', help="method to use")
+    parser.add_argument("--search_method", default='grid_search', help="method to use")
     parser.add_argument("--Index", default= "PGM")                  # Policy name (TD3, DDPG, SAC or OurDDPG)
     parser.add_argument("--data_file", default='data_0')# Time steps initial random policy is used
 
@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
     if args.Index == "PGM":
 
-            Parameter_change.updateFile("./Index/PGM/index_test.cpp",4,1)
+            Parameter_change.updateFile("./Index/PGM/index_test.cpp",252,1)
             os.system('g++ ./Index/PGM/index_test.cpp  -w -std=c++17 -o ./Index/PGM/exe_pgm_index')
             os.system(f'./Index/PGM/exe_pgm_index ./data/{data_file_name}')
 

@@ -25,24 +25,31 @@ from agents import DDPG
 from agents import dqn
 
 
-def eval_policy(policy, data, eval_episodes=10):
+def eval_policy(policy, data, eval_episodes=4):
     eval_env = PGMIndex(data)
     eval_env.reset()
     state = []
+    best_state = [] 
+    best_reward = -np.inf
+    reward_list = []
     avg_reward = 0.
     for _ in range(eval_episodes):
         state, done = eval_env.reset(), False
-        for _ in range(20):
+        for _ in range(4):
             action = policy.select_action(np.array(state))
             state, reward, done, _ = eval_env.step(action)
             avg_reward += reward
-
-    avg_reward = avg_reward/(eval_episodes*20)
+            reward_list.append(reward)
+            if reward >= best_reward:
+                best_reward = reward
+                best_state = state
+            
+    avg_reward = avg_reward/(eval_episodes*4)
 
     print("---------------------------------------")
-    print(f"Evaluation over {eval_episodes} episodes: {avg_reward:.5f} parameter: {state}")
+    print(f"Evaluation over {eval_episodes} episodes: {avg_reward:.5f} parameter: {best_state} best reward:{best_reward:.5f}")
     print("---------------------------------------")
-    return avg_reward
+    return [avg_reward,best_state,best_reward]
 
 
 
@@ -55,9 +62,9 @@ if __name__ == "__main__":
     parser.add_argument("--data_file", default='data_0')
     parser.add_argument("--search_method", default='RL', help="method to use")
     parser.add_argument("--seed", default=0, type=int)              # Sets Gym, PyTorch and Numpy seeds
-    parser.add_argument("--start_timesteps", default=1e2, type=int)# Time steps initial random policy is used
-    parser.add_argument("--eval_freq", default=1e3, type=int)       # How often (time steps) we evaluate
-    parser.add_argument("--max_timesteps", default=5e4, type=int)   # Max time steps to run environment
+    parser.add_argument("--start_timesteps", default=30, type=int)# Time steps initial random policy is used
+    parser.add_argument("--eval_freq", default=30, type=int)       # How often (time steps) we evaluate
+    parser.add_argument("--max_timesteps", default=3e3, type=int)   # Max time steps to run environment
     parser.add_argument("--expl_noise", default=0.1)                # Std of Gaussian exploration noise
     parser.add_argument("--batch_size", default=256, type=int)      # Batch size for both actor and critic
     parser.add_argument("--discount", default=0.99)                 # Discount factor
@@ -164,8 +171,10 @@ if __name__ == "__main__":
     episode_reward = 0
     episode_timesteps = 0
     episode_num = 0
+    episode_reward_list = []
+    lowest_reward = 0
 
-    MAX_EPI_STEPS = 100
+    MAX_EPI_STEPS = 50
 
     for t in range(int(args.max_timesteps)):
 
@@ -209,19 +218,22 @@ if __name__ == "__main__":
             policy.store_transition(state, action, reward,next_state)  # type: ignore
             state = next_state
             episode_reward += reward
+            episode_reward_list.append(reward)
             if t >= args.start_timesteps:
-                if policy.memory_counter > 100:  # type: ignore
+                if policy.memory_counter > 20:  # type: ignore
                     policy.train()  # type: ignore
 
         
         if  episode_timesteps  == MAX_EPI_STEPS: 
+            highest_reward = max(episode_reward_list)
             # +1 to account for 0 indexing. +0 on ep_timesteps since it will increment +1 even if done=True
-            print(f"Total T: {t+1} Episode Num: {episode_num+1} Episode T: {episode_timesteps} Reward: {episode_reward:.3f}")
+            print(f"Total T: {t+1} Episode Num: {episode_num+1} Episode T: {episode_timesteps} Reward: {episode_reward:.5f}, Best reward: {highest_reward:.5f}")
             # Reset environment
             state, done = env.reset(), False
             episode_reward = 0
             episode_timesteps = 0
             episode_num += 1 
+            episode_reward_list = []
 
             # Evaluate episode
         if (t + 1) % args.eval_freq == 0:
