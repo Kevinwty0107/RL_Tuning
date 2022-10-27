@@ -7,9 +7,9 @@ echo "Start Testing......"
 # python3 controller.py --search_method random_search --data_file data_0
 # wait
 
-echo "BO"
-python3 controller.py --search_method BO --data_file data_0
-wait
+# echo "BO"
+# python3 controller.py --search_method BO --data_file data_0
+# wait
 
 # echo "grid_search"
 # python3 controller.py --search_method grid_search --data_file data_0

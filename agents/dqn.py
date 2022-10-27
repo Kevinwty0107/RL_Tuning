@@ -43,7 +43,7 @@ class DQN:
     EPSILON = 0.9,               
     GAMMA = 0.9,                
     TARGET_REPLACE_ITER = 100, 
-    MEMORY_CAPACITY= 100 ):
+    MEMORY_CAPACITY= 20 ):
         self.net,self.target_net=Net(state_dim,action_dim).to(device),Net(state_dim,action_dim).to(device)
         
         self.learn_step_counter=0
