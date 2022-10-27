@@ -75,5 +75,6 @@
         "utility": "cpp",
         "variant": "cpp",
         "filesystem": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": true
 }
