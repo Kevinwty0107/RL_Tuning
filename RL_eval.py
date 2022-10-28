@@ -72,7 +72,7 @@ if __name__ == "__main__":
     parser.add_argument("--noise_clip", default=0.5)                # Range to clip target policy noise
     parser.add_argument("--policy_freq", default=2, type=int)       # Frequency of delayed policy updates
     parser.add_argument("--save_model", default=False)              # Save model and optimizer parameters
-    parser.add_argument("--load_model", default="")                 # Model load file name, "" doesn't load, "default" uses file_name
+    parser.add_argument("--load_model", default="default")                 # Model load file name, "" doesn't load, "default" uses file_name
     parser.add_argument("--sample_mode",default="random_local")     # random_local: local + global sampling, random: only global sampling
 
 
@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
     evaluations = []
 
-    for i in range(30):
+    for i in tqdm(range(30)):
 
         data_name = "data_" + f"{i}"
         data_file_name = data_name+".txt"
@@ -152,7 +152,7 @@ if __name__ == "__main__":
         # Evaluate untrained policy
 
         evaluations.append(eval_policy(policy, data_file_name))
-        np.save(f"./results/{args.search_method}/{file_name}_{data_name}", evaluations)
+        np.save(f"./results/{args.search_method}/0_shot_{file_name}_{data_name}", evaluations)
         if args.save_model: policy.save(f"./rlmodels/{file_name}")
 
 

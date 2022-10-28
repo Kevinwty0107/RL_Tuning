@@ -21,7 +21,7 @@ using namespace std;
 template<typename K>
 class PGMMultiset {
     std::vector<K> data;
-    pgm::PGMIndex<K,900, 8, float> pgm;
+    pgm::PGMIndex<K,500, 9, float> pgm;
 
 public:
 

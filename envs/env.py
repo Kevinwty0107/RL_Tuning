@@ -137,6 +137,9 @@ class PGMIndex(gym.Env):
 
         self.para_dict["epsilon"] = 64
         self.para_dict["er"] = 4
+        Parameter_change.updateFile("./Index/PGM/index_test.cpp",self.para_dict["epsilon"],self.para_dict["er"])
+        os.system('g++ ./Index/PGM/index_test.cpp  -w -std=c++17 -o ./Index/PGM/exe_pgm_index')
+        os.system(f'./Index/PGM/exe_pgm_index ./data/{self.data_file_name}')
 
         return np.array((self.para_dict["epsilon"],self.para_dict["er"])).astype(np.int32)  # reward, done, info can't be included
 
