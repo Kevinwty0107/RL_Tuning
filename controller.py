@@ -86,7 +86,7 @@ if __name__ == "__main__":
             return acc
 
         param_grid = {
-            'epsilon': hp.choice('epsilon', range(100,8000) ),
+            'epsilon': hp.choice('epsilon', range(1,8000) ),
             'ER': hp.choice('ER', range(1,20))}
 
         trials = Trials()
@@ -187,7 +187,7 @@ if __name__ == "__main__":
         best_hyperparams = []
 
         param_grid = {
-            'epsilon': list(np.arange(200,8000)),
+            'epsilon': list(np.arange(1,8000)),
             'er': list(np.arange(1,20))
             }
 

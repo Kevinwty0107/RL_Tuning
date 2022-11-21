@@ -1,0 +1,77 @@
+
+// User-changeable parameters  (has original setter function)
+
+#define external_expectedInsertFrac 1
+    Range: [0,1]  0 - read-only workloads, 1 - write-only workloads
+    Default : 1
+
+#define external_maxNodeSize 1 << 24
+    Range: multiples of MB or powers of 2  (1 << 24 = 2^24 = 16MB, 
+                                            1 << 20 = 2^20 = 10MB)
+    Default: 1 << 24 or 16MB
+
+#define external_approximateModelComputation true
+    Range: Boolean (true/false) true - makes bulk load faster by sampling
+    Defult: true
+
+#define external_approximateCostComputation false
+    Range: Boolean (true/false) true - makes bulk load faster by sampling
+    Defult: true
+
+
+//Experimental parameters (may break the system)
+#define external_fanoutSelectionMethod 0
+    Range: 0 or 1 (0 = bottom up fanout tree, 1 = top down fanout tree)
+    Default: 0
+
+#define external_splittingPolicyMethod 1
+    Range: 0,1,2   (0 = always split node in 2, 
+                    1 = decide between no splitting or splitting in 2, 
+                    2 = split by calculate cost with fannout tree)
+    Default: 0
+
+#define external_allowSplittingUpwards false
+    Range: Boolean (true/false) true - node split propagate up the tree (like B+tree)
+    Default: false
+
+//Constant parameters in ALEX
+#define external_kMinOutOfDomainKeys 5
+    Range: 0 - N-1, where N is number of keys. 
+            Decides the minimium out of domain inserts into node before expansion. 
+            (Larger means more keys before expand)
+            Essentially, minimium size of the buffer before expansion.
+    Default: 5
+
+#define external_kMaxOutOfDomainKeys 1000
+    Range: external_kMinOutOfDomainKeys+1 - N, where N is number of keys.
+            Decides the maximium out of domain inserts into node before expansion. 
+            (Larger means more keys before expand)
+            Essentially, maximium size of the buffer before expansion.
+    Default: 1000 (must be larger than external_kMinOutOfDomainKeys)
+
+#define external_kOutOfDomainToleranceFactor 2
+    Range: 1 - N, where N is number of keys. (This value is a factor, so 10 means 10x)
+            Controls whether to expand if out-of-domain key is between min and max limits.
+    Default: 2 (Don't make this value too large since it is a factor)
+
+
+#define external_kMaxDensity 0.8
+    Range: [0,1] Maxmium number of keys (without gaps) in each node.(Proportion to total size)
+                    Decides when to expand.
+    Default: 0.8 (Must be larger than kInitDensity and kMinDensity)
+                kMinDensity < kInitDensity < kMaxDensity
+
+#define external_kInitDensity 0.7
+    Range: [0,1]  Number of keys (without gaps) in each node after bulkload.(Proportion to total size)
+    Default: 0.7 (Must be larger than kMinDensity and smaller than kMaxDensity)
+                kMinDensity < kInitDensity < kMaxDensity
+
+#define external_kMinDensity 0.6
+    Range: [0,1]  Minimium number of keys (without gaps) in each node.(Proportion to total size)
+                    Decides when to contract.
+    Default: 0.7 (Must be smaller than kMaxDensity and kInitDensity)
+                kMinDensity < kInitDensity < kMaxDensity
+
+#define external_kAppendMostlyThreshold 0.9
+    Range: [0,1]  Determines when to consider workload is mostly append.
+    Default: 0.9

@@ -9,7 +9,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <sstream>
-
+#include <math.h>
 
 using namespace std;
 
@@ -21,7 +21,7 @@ using namespace std;
 template<typename K>
 class PGMMultiset {
     std::vector<K> data;
-    pgm::PGMIndex<K,500, 9, float> pgm;
+    pgm::PGMIndex<K,50, 100, float> pgm;
 
 public:
 
@@ -78,6 +78,7 @@ void print_iterator(Iter first, Iter last) {
 
 int main(int argc, char * argv[]) {
 
+
         string labels_txt_file = argv[1];
         std::vector<string> data;
 
@@ -115,9 +116,9 @@ int main(int argc, char * argv[]) {
         clock_t start,end;
     // Query the PGM-index
 
-    // sample queries
+    // sample queries, to do here
         start=clock();
-        for (int i=0;i<2000;i++){
+        for (int i=0;i<10000;i++){
 
             multiset.count(i);
             (multiset.contains(i) ? "true" : "false");
