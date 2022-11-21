@@ -51,7 +51,7 @@ int main(int argc, char * argv[])
     alex::Alex<uint64_t,int> alex;
 
     //Load into ALEX (No Bulk Load)
-    for (int i = 0; i < data.size(); ++i)
+    for (int i = 0; i < 100; ++i)
     {
         alex.insert(data[i],i);
     }
@@ -69,7 +69,7 @@ int main(int argc, char * argv[])
     // Run Query 
     clock_t start,end;
     start=clock();
-    for (int query_key = 0; query_key < 10000; ++query_key)
+    for (int query_key = 0; query_key < 1000; ++query_key)
     {
         alex.count(query_key);
         alex.find(query_key);

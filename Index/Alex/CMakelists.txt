@@ -1,0 +1,33 @@
+cmake_minimum_required(VERSION 3.12)
+project(alex)
+
+set(CMAKE_CXX_STANDARD 17)
+
+# Define the macro ‘DEBUG' in the debug mode
+if(CMAKE_BUILD_TYPE STREQUAL Debug)        
+    ADD_DEFINITIONS(-DDEBUG)               
+endif()
+
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "/O2 /arch:AVX2 /W1 /EHsc")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse3")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+    set(CMAKE_CXX_FLAGS "-O3 -xHost")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse3")
+else()
+    # clang and gcc
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
+    set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -msse3")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse3")
+    set(CMAKE_CXX_FLAGS "-O3 -march=native -Wall -Wextra")
+endif()
+
+include_directories(src)
+
+add_executable(example src/examples/main.cpp)
+add_executable(benchmark src/benchmark/main.cpp)
