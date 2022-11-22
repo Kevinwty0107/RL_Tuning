@@ -1,0 +1,15 @@
+no_model_nodes:69
+no_model_node_expansions:155
+no_model_node_split:0
+num_model_node_expansion_pointers:8388902
+num_model_node_split_pointers:0
+no_data_nodes:3809
+no_expand_and_scale:21000
+no_expand_and_retrain:7196
+no_downward_split:69
+no_sideways_split:3732
+no_downward_split_keys:40977
+no_sideways_split_keys:1439133
+no_search:40000
+no_inserts:1000000
+no_node_traveral:-719990
